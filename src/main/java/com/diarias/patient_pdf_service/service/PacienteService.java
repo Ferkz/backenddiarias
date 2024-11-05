@@ -33,8 +33,8 @@ public class PacienteService {
             PdfWriter writer = new PdfWriter(byteArrayOutputStream);
             com.itextpdf.kernel.pdf.PdfDocument pdfDocument = new com.itextpdf.kernel.pdf.PdfDocument(writer);
             Document document = new Document(pdfDocument);
-            String imagePath = "https://colegioprestesmaia.com.br/wp-content/uploads/2020/12/seu-logo-aqui-1-300x113.png";
-            ImageData imageData = ImageDataFactory.create(imagePath);
+            String logo =  "src/main/resources/images/nova-logo.png";
+            ImageData imageData = ImageDataFactory.create(logo);
             Image image = new Image(imageData);
 
             image.setWidth(200);
@@ -43,7 +43,7 @@ public class PacienteService {
             document.add(image);
 
             document.setMargins(20, 20, 20, 20);
-            document.add(new Paragraph("Informações sobre o Paciente").setTextAlignment(TextAlignment.CENTER).setFontSize(15).setBold());
+            document.add(new Paragraph("DEMONSTRATIVO DE DESPESAS\n").setTextAlignment(TextAlignment.CENTER).setFontSize(20));
             document.add(new Paragraph("Nome: " + pacienteRequest.getNome()));
             document.add(new Paragraph("Número de Prontuário: " + pacienteRequest.getNumeroProntuario()));
             document.add(new Paragraph("Tipo de Alta: " + pacienteRequest.getTipoAlta()));
