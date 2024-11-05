@@ -38,7 +38,7 @@ public class PacienteController {
         if (pdfOpt.isPresent()) {
             Paciente paciente = pdfOpt.get();
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_PDF);  // Define o tipo como PDF
+            headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDispositionFormData("inline", paciente.getNome() + ".pdf");  // Exibe o PDF inline em uma nova guia
             return ResponseEntity.ok()
                     .headers(headers)

@@ -1,6 +1,8 @@
 package com.diarias.patient_pdf_service.model;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "patient_pdf")
 public class Paciente {
@@ -14,6 +16,10 @@ public class Paciente {
     private String dataSaida;
     private String horaEntrada;
     private String horaSaida;
+    private Number diasInternado;
+    private String valorDiario;
+    private String valorTotal;
+    private LocalDate created_at;
     @Lob
     private byte[] pdfData;
     public Long getId() {
@@ -59,6 +65,30 @@ public class Paciente {
     }
     public void setHoraSaida(String horaSaida) {
         this.horaSaida = horaSaida;
+    }
+    public Number getDiasInternado() {
+        return diasInternado;
+    }
+    public void setDiasInternado(Number dias){
+        this.diasInternado = dias;
+    }
+    public String getValorDiario() {
+        return valorDiario;
+    }
+    public void setValorDiario(String valorDiario){
+       this.valorDiario = valorDiario;
+    }
+    public String getValorTotal (){
+        return valorTotal;
+    }
+    public void setValorTotal(String valorTotal){
+        this.valorTotal = valorTotal;
+    }
+    public LocalDate getCreated_at() {
+        return created_at;
+    }
+    public void setCreated_at(LocalDate created_at) {
+        this.created_at = created_at;
     }
     public byte[] getPdfData(){
         return pdfData;

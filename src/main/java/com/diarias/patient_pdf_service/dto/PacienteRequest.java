@@ -1,5 +1,7 @@
 package com.diarias.patient_pdf_service.dto;
 
+import java.time.LocalDate;
+
 public class PacienteRequest {
     private String nome;
     private Number numeroProntuario;
@@ -8,6 +10,10 @@ public class PacienteRequest {
     private String dataSaida;
     private String horaEntrada;
     private  String horaSaida;
+    private Number diasInternado;
+    private String valorDiario;
+    private String valorTotal;
+    private LocalDate created_at;
     public String getNome(){
         return nome;
     }
@@ -28,5 +34,17 @@ public class PacienteRequest {
     }
     public String getHoraSaida(){
         return horaSaida;
+    }
+    public Number getDiasInternado() {
+        return diasInternado;
+    }
+    public String getValorDiario(){
+        return valorDiario;
+    }
+    public String getValorTotal(){
+        return valorTotal;
+    }
+    public LocalDate getCreated_at() {
+        return created_at;
     }
 }
