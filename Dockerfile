@@ -7,6 +7,6 @@ RUN mvn clean package -DskipTests
 # Usa uma imagem JRE para rodar a aplicação
 FROM openjdk:17-jdk-slim
 WORKDIR /app
-COPY --from=build /app/target/patient-pdf-service.jar app.jar
+COPY --from=build /app/target/patient-pdf-service-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
