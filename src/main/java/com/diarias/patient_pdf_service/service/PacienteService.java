@@ -7,18 +7,11 @@ import com.diarias.patient_pdf_service.repository.PacienteRepository;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.kernel.colors.Color;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.property.TextAlignment;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -34,7 +27,7 @@ public class PacienteService {
             PdfWriter writer = new PdfWriter(byteArrayOutputStream);
             com.itextpdf.kernel.pdf.PdfDocument pdfDocument = new com.itextpdf.kernel.pdf.PdfDocument(writer);
             Document document = new Document(pdfDocument);
-            String logo = new ClassPathResource("images/nova-logo.png").getFile().getPath();
+            String logo = "/app/resources/images/nova-logo.png";
             ImageData imageData = ImageDataFactory.create(logo);
             Image image = new Image(imageData);
 
