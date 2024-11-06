@@ -18,6 +18,7 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.property.TextAlignment;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -33,7 +34,7 @@ public class PacienteService {
             PdfWriter writer = new PdfWriter(byteArrayOutputStream);
             com.itextpdf.kernel.pdf.PdfDocument pdfDocument = new com.itextpdf.kernel.pdf.PdfDocument(writer);
             Document document = new Document(pdfDocument);
-            String logo =  "src/main/resources/images/nova-logo.png";
+            String logo = new ClassPathResource("images/nova-logo.png").getFile().getPath();
             ImageData imageData = ImageDataFactory.create(logo);
             Image image = new Image(imageData);
 
