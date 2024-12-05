@@ -4,6 +4,8 @@ import com.diarias.patient_pdf_service.dto.PacienteRequest;
 import com.diarias.patient_pdf_service.model.Paciente;
 import com.diarias.patient_pdf_service.repository.PacienteRepository;
 
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Table;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -11,6 +13,7 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -18,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.List;
+import  com.itextpdf.layout.property.UnitValue;
+
 
 @Service
 public class PacienteService {
@@ -28,19 +33,31 @@ public class PacienteService {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
 
             ClassPathResource imgFile = new ClassPathResource("images/nova-logo.png");
+            ClassPathResource imgSus = new ClassPathResource("images/sus-logo.png");
             InputStream inputStream = imgFile.getInputStream();
+            InputStream InputLogoSus = imgSus.getInputStream();
 
             ImageData imageData = ImageDataFactory.create(inputStream.readAllBytes());
-            Image logo = new Image(imageData);
+            ImageData imgLogoSus = ImageDataFactory.create(InputLogoSus.readAllBytes());
+
+            Image logoSamar = new Image(imageData);
+            Image logoSus = new Image(imgLogoSus);
 
             PdfWriter writer = new PdfWriter(byteArrayOutputStream);
             PdfDocument pdfDocument = new PdfDocument(writer);
             Document document = new Document(pdfDocument);
 
-            logo.setWidth(200);
-            logo.setHeight(80);
-            logo.setTextAlignment(TextAlignment.CENTER);
-            document.add(logo);
+            logoSamar.setWidth(180);
+            logoSus.setWidth(160);
+            logoSamar.setHeight(80);
+            logoSus.setHeight(80);
+
+            Table table = new Table(UnitValue.createPercentArray(2)).useAllAvailableWidth();
+
+            table.addCell(new Cell().add(logoSamar).setBorder(null).setTextAlignment(TextAlignment.LEFT));
+            table.addCell(new Cell().add(logoSus).setBorder(null).setTextAlignment(TextAlignment.RIGHT));
+
+            document.add(table);
 
             document.setMargins(20, 20, 20, 20);
             document.add(new Paragraph("DEMONSTRATIVO DE DESPESAS\n").setTextAlignment(TextAlignment.CENTER).setFontSize(20));
