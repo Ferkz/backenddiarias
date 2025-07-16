@@ -1,5 +1,5 @@
 package com.diarias.patient_pdf_service.controller;
-import com.diarias.patient_pdf_service.dto.PacienteRequest;
+import com.diarias.patient_pdf_service.dto.PacienteRequestDTO;
 import com.diarias.patient_pdf_service.model.Paciente;
 import com.diarias.patient_pdf_service.repository.PacienteRepository;
 import com.diarias.patient_pdf_service.service.PacienteService;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/diaria")
@@ -26,12 +25,12 @@ public class PacienteController {
         this.pacienteRepository = pacienteRepository;
     }
     @PostMapping("/cria-diaria")
-    public ResponseEntity<Void> generatePdf(@RequestBody PacienteRequest pacienteRequest) {
+    public ResponseEntity<Void> generatePdf(@RequestBody PacienteRequestDTO pacienteRequest) {
         pacienteService.generateAndSavePdf(pacienteRequest);
         return ResponseEntity.ok().build();
     }
     @GetMapping("/lista-diaria")
-    public ResponseEntity<List<Paciente>> getAllPdfs() {
+    public ResponseEntity<List<PacienteRequestDTO>> getAllPdfs() {
         return ResponseEntity.ok(pacienteService.getAllPdfs());
     }
     @GetMapping("/visualizar/{id}")

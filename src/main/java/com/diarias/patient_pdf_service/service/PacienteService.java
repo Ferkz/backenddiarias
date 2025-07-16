@@ -1,6 +1,6 @@
 package com.diarias.patient_pdf_service.service;
 
-import com.diarias.patient_pdf_service.dto.PacienteRequest;
+import com.diarias.patient_pdf_service.dto.PacienteRequestDTO;
 import com.diarias.patient_pdf_service.model.Paciente;
 import com.diarias.patient_pdf_service.repository.PacienteRepository;
 
@@ -46,7 +46,7 @@ public class PacienteService {
         ));
     }
 
-    public Paciente generateAndSavePdf(PacienteRequest pacienteRequest) {
+    public Paciente generateAndSavePdf(PacienteRequestDTO pacienteRequest) {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
 
             ClassPathResource imgFile = new ClassPathResource("images/nova-logo.png");
@@ -99,7 +99,6 @@ public class PacienteService {
             pacientePdf.setDataEntrada(pacienteRequest.getDataEntrada());
             pacientePdf.setDataSaida(pacienteRequest.getDataSaida());
             pacientePdf.setHoraEntrada(pacienteRequest.getHoraEntrada());
-            // BUG CORRIGIDO: Estava usando getDataSaida() em vez de getHoraSaida()
             pacientePdf.setHoraSaida(pacienteRequest.getHoraSaida());
             pacientePdf.setDiasInternado(pacienteRequest.getDiasInternado());
             pacientePdf.setValorDiario(pacienteRequest.getValorDiario());
@@ -107,15 +106,14 @@ public class PacienteService {
             pacientePdf.setCompetencia(pacienteRequest.getCompetencia());
             pacientePdf.setNumeroAih(pacienteRequest.getNumeroAih());
             pacientePdf.setPdfData(pdfBytes);
-            // O campo 'createdAt' será preenchido automaticamente pela anotação @PrePersist na entidade
 
             return pacienteRepository.save(pacientePdf);
         } catch (Exception e) {
             throw new RuntimeException("Erro ao gerar PDF", e);
         }
     }
-    public List<Paciente> getAllPdfs() {
-        return pacienteRepository.findAll();
+    public List<PacienteRequestDTO> getAllPdfs() {
+        return pacienteRepository.findAllPacientesAsDTO();
     }
     public Paciente findById (Long id){
         return pacienteRepository.findById(id).orElse(null);
