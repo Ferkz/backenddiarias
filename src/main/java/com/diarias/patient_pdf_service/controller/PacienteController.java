@@ -33,6 +33,17 @@ public class PacienteController {
     public ResponseEntity<List<PacienteRequestDTO>> getAllPdfs() {
         return ResponseEntity.ok(pacienteService.getAllPdfs());
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<Paciente> getPacienteById(@PathVariable Long id) {
+        Optional<Paciente> pacienteOpt = pacienteRepository.findById(id);
+        return pacienteOpt.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updatePaciente(@PathVariable Long id, @RequestBody PacienteRequestDTO pacienteRequest) {
+        pacienteService.updatePaciente(id, pacienteRequest);
+        return ResponseEntity.ok().build();
+    }
     @GetMapping("/visualizar/{id}")
     public ResponseEntity<byte[]> getPdf(@PathVariable Long id) {
         Optional<Paciente> pdfOpt = pacienteRepository.findById(id);

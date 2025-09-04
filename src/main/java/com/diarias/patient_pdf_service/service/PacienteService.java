@@ -46,9 +46,8 @@ public class PacienteService {
         ));
     }
 
-    public Paciente generateAndSavePdf(PacienteRequestDTO pacienteRequest) {
+    private byte[] gerarPdfBytes(PacienteRequestDTO pacienteRequest) throws IOException {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-
             ClassPathResource imgFile = new ClassPathResource("images/nova-logo.png");
             ClassPathResource imgSus = new ClassPathResource("images/sus-logo.png");
             InputStream inputStream = imgFile.getInputStream();
@@ -76,10 +75,8 @@ public class PacienteService {
             document.add(new Paragraph("DEMONSTRATIVO DE DESPESAS\n").setTextAlignment(TextAlignment.CENTER).setFontSize(20));
             document.add(new Paragraph("Nome: " + pacienteRequest.getNome()));
             document.add(new Paragraph("Número de Prontuário: " + pacienteRequest.getNumeroProntuario()));
-            // CAMPO ADICIONADO AO PDF
-            document.add(new Paragraph("Nº da AIH: " + pacienteRequest.getNumeroAih()));
+            //document.add(new Paragraph("Nº da AIH: " + pacienteRequest.getNumeroAih()));
             document.add(new Paragraph("Tipo de Alta: " + pacienteRequest.getTipoAlta()));
-            // CAMPO ADICIONADO AO PDF
             document.add(new Paragraph("Competência: " + pacienteRequest.getCompetencia()));
             document.add(new Paragraph("Data de Entrada: " + pacienteRequest.getDataEntrada()));
             document.add(new Paragraph("Data de Saída: " + pacienteRequest.getDataSaida()));
@@ -90,7 +87,13 @@ public class PacienteService {
             document.add((new Paragraph("Valor total da internação: " + pacienteRequest.getValorTotal() )));
             document.close();
 
-            byte[] pdfBytes = byteArrayOutputStream.toByteArray();
+            return byteArrayOutputStream.toByteArray();
+        }
+    }
+
+    public Paciente generateAndSavePdf(PacienteRequestDTO pacienteRequest) {
+        try {
+            byte[] pdfBytes = gerarPdfBytes(pacienteRequest);
 
             Paciente pacientePdf = new Paciente();
             pacientePdf.setNome(pacienteRequest.getNome());
@@ -104,7 +107,7 @@ public class PacienteService {
             pacientePdf.setValorDiario(pacienteRequest.getValorDiario());
             pacientePdf.setValorTotal(pacienteRequest.getValorTotal());
             pacientePdf.setCompetencia(pacienteRequest.getCompetencia());
-            pacientePdf.setNumeroAih(pacienteRequest.getNumeroAih());
+            //pacientePdf.setNumeroAih(pacienteRequest.getNumeroAih());
             pacientePdf.setPdfData(pdfBytes);
 
             return pacienteRepository.save(pacientePdf);
@@ -168,4 +171,35 @@ public class PacienteService {
         }
     }
 
+    @Transactional
+    public void updatePaciente(Long id, PacienteRequestDTO pacienteRequest) {
+        // 1. Encontra o paciente existente no banco
+        Paciente pacienteExistente = pacienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Paciente não encontrado com o id: " + id));
+
+        // 2. Atualiza todos os campos do paciente existente com os novos dados
+        pacienteExistente.setNome(pacienteRequest.getNome());
+        pacienteExistente.setNumeroProntuario(pacienteRequest.getNumeroProntuario());
+        pacienteExistente.setNumeroAih(pacienteRequest.getNumeroAih());
+        pacienteExistente.setTipoAlta(pacienteRequest.getTipoAlta());
+        pacienteExistente.setCompetencia(pacienteRequest.getCompetencia());
+        pacienteExistente.setDataEntrada(pacienteRequest.getDataEntrada());
+        pacienteExistente.setDataSaida(pacienteRequest.getDataSaida());
+        pacienteExistente.setHoraEntrada(pacienteRequest.getHoraEntrada());
+        pacienteExistente.setHoraSaida(pacienteRequest.getHoraSaida());
+        pacienteExistente.setDiasInternado(pacienteRequest.getDiasInternado());
+        pacienteExistente.setValorDiario(pacienteRequest.getValorDiario());
+        pacienteExistente.setValorTotal(pacienteRequest.getValorTotal());
+
+        // 3. Regenera o PDF com os dados atualizados
+        try {
+            byte[] novoPdfData = gerarPdfBytes(pacienteRequest);
+            pacienteExistente.setPdfData(novoPdfData);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao regenerar o PDF durante a atualização", e);
+        }
+        pacienteRepository.save(pacienteExistente);
+    }
+
 }
+
